@@ -77,7 +77,17 @@ As evidências produzidas durante a atividade incluem a definição da DAG, conf
 
 A DAG `ETL_toll_data` foi configurada para execução diária, sem catchup, com retry em caso de falha.
 
-O pipeline gera como saída `transformed_data.csv`, contendo os registros consolidados e transformados.
+O pipeline gera como saída `transformed_data.csv`, contendo os registros consolidados e transformados. O arquivo de saída foi incluído na raiz do repositório para facilitar sua inspeção.
+
+### Competências demonstradas
+
+- Construção de pipeline ETL;
+- orquestração de workflow com Apache Airflow;
+- processamento de múltiplos formatos de dados;
+- manipulação de dados via ferramentas Unix;
+- definição de dependências entre tarefas;
+- validação de execução e análise de resultados;
+- versionamento e documentação técnica com Git/GitHub.
 
 ## Autor
 
