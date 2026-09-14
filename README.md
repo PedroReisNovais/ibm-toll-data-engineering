@@ -1,73 +1,86 @@
 # IBM Toll Data Engineering
 
-Projeto de engenharia de dados desenvolvido como atividade prática da IBM, com foco na construção de um pipeline ETL para dados de pedágio.
+Pipeline ETL de dados de pedágio desenvolvido em uma atividade prática da IBM Data Engineering.
 
-## Objetivo
+## Visão geral
 
-Construir um fluxo de dados capaz de extrair informações provenientes de diferentes formatos de arquivo, consolidá-las, transformá-las e orquestrar a execução do pipeline.
+O projeto implementa uma DAG do **Apache Airflow** que extrai dados de três formatos diferentes, consolida os resultados e aplica uma transformação final. O código principal está em `dags/ETL_toll_data.py`.
 
-## Tecnologias
-
-- Linux / Shell
-- Python
-- Apache Airflow
-- ETL (Extract, Transform, Load)
-- CSV
-- TSV
-- Fixed-width files
-- Git & GitHub
-
-## Pipeline ETL
-
-O projeto trabalha com três fontes de dados:
-
-1. **CSV** — extração de dados tabulares.
-2. **TSV** — extração de dados delimitados por tabulação.
-3. **Fixed-width** — extração de registros em posições fixas.
-
-Após a extração, os dados são consolidados e transformados para gerar o conjunto final utilizado pelo pipeline.
-
-### Fluxo
+## Pipeline
 
 ```text
-CSV ───────────┐
-TSV ───────────┼─> Extract ─> Consolidate ─> Transform ─> Output
-Fixed Width ───┘
-                         │
-                    Apache Airflow
-                    (orchestration)
+tolldata.tgz
+    |
+    v
+unzip_data
+    |
+    v
+extract_data_from_csv
+    |
+    v
+extract_data_from_tsv
+    |
+    v
+extract_data_from_fixed_width
+    |
+    v
+consolidate_data
+    |
+    v
+transform_data
+    |
+    v
+transformed_data.csv
 ```
 
-## Apache Airflow
+A ordem das tarefas é definida explicitamente na DAG.
 
-O pipeline é definido como uma DAG no Apache Airflow. As tarefas representam as etapas de extração, consolidação e transformação, permitindo controlar dependências e acompanhar as execuções.
+## Etapas
 
-## Estrutura planejada
+- **Unzip:** descompacta o conjunto de dados de entrada.
+- **CSV:** seleciona os campos 1–4 de `vehicle-data.csv`.
+- **TSV:** seleciona os campos 5–7 de `tollplaza-data.tsv` e converte tabulações para vírgulas.
+- **Fixed width:** extrai as posições 59–67 de `payment-data.txt`.
+- **Consolidação:** combina as três extrações em `extracted_data.csv`.
+- **Transformação:** converte o quarto campo para letras maiúsculas e gera `transformed_data.csv`.
+
+## Tecnologias e conceitos
+
+- Python
+- Apache Airflow
+- Bash / Linux
+- ETL
+- CSV e TSV
+- Arquivos fixed-width
+- `cut`, `tr`, `paste` e `awk`
+- Git e GitHub
+
+## Estrutura
 
 ```text
 ibm-toll-data-engineering/
-├── README.md
 ├── dags/
 │   └── ETL_toll_data.py
 ├── data/
 │   └── transformed_data.csv
-└── evidence/
-    └── screenshots do projeto
+├── evidence/
+│   └── screenshots da execução
+├── .gitignore
+└── README.md
 ```
 
-## Competências demonstradas
+## Evidências
 
-- Construção de pipelines ETL
-- Processamento de múltiplos formatos de dados
-- Automação de tarefas de engenharia de dados
-- Definição e execução de DAGs
-- Orquestração com Apache Airflow
-- Organização de projeto para versionamento com Git
+As evidências produzidas durante a atividade incluem a definição da DAG, configuração dos argumentos, tarefas de extração, consolidação e transformação, cadeia de dependências e execuções do Airflow com status de sucesso.
 
-## Contexto
+## Resultado
 
-Projeto desenvolvido durante a formação IBM em Data Engineering, como exercício prático de criação e orquestração de pipelines de dados.
+A DAG `ETL_toll_data` foi configurada para execução diária, sem catchup, com retry em caso de falha.
 
----
+O pipeline gera como saída `transformed_data.csv`, contendo os registros consolidados e transformados.
 
-**Autor:** Pedro Reis Novais
+## Autor
+
+**Pedro Reis Novais**
+
+Projeto acadêmico desenvolvido como parte da formação IBM em Data Engineering.
